@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp">
+
+    <ImageView
+        android:id="@+id/notificationImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/notification"
+
+        android:scaleType="fitStart"
+        app:srcCompat="@drawable/voordeur_test_foto" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/notificationImage">
+
+        <ImageView
+            android:id="@+id/imageViewClock"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:contentDescription="@string/time"
+            app:srcCompat="@drawable/clock"
+            android:layout_alignParentStart="true"/>
+
+        <Chronometer
+            android:id="@+id/chronometerTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageViewClock"
+            android:format="00:00:00"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/imageViewWaiting"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:contentDescription="@string/time"
+            app:srcCompat="@drawable/timer"
+            android:layout_below="@+id/chronometerTime"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp" />
+
+        <Chronometer
+            android:id="@+id/chronometerTimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:format="00:00"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:layout_below="@+id/imageViewWaiting"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/openButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="@string/open"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

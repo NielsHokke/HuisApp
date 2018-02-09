@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">HuisApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">this is section: %1$d</string>
+
+    <string name="connecting">Connecting to voordeur</string>
+    <string name="cant_connect">Can\'t connect to voordeur</string>
+
+    <string name="open">Open door</string>
+    <string name="notification">Test Notification</string>
+    <string name="time">Time</string>
+</resources>
