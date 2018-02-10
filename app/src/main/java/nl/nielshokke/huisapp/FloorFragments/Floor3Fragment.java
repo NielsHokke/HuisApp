@@ -1,6 +1,7 @@
 package nl.nielshokke.huisapp.FloorFragments;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -63,88 +64,21 @@ public class Floor3Fragment extends Fragment {
     private void loadFloor(RelativeLayout rootView){
         ImageView floor_IV = rootView.findViewById(R.id.floorView);
         floor_IV.setImageResource(R.drawable.floor3);
-
-        ImageView mask_IV = rootView.findViewById(R.id.maskView);
-        mask_IV.setImageResource(R.drawable.mapfloor3);
-
         setItemsFloor(rootView);
-        setOnTouchListenerFloor(rootView);
     }
 
     private void setItemsFloor(RelativeLayout rootView){
-        lamp_M_Group = new LampGroup(getActivity(), rootView, queue, "all", R.drawable.lamp1_m_on, R.drawable.lamp1_m_off, false, false, true);
+        lamp_M_Group = new LampGroup(getActivity(), rootView, queue, "all", R.drawable.lamp_groot_on, R.drawable.lamp_groot_off, false, false, true, 0, -500);
 
-        lamp_R = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "rechts", R.drawable.lamp1_r_on, R.drawable.lamp1_r_off, false, true);
-        lamp_LO = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "links_onder", R.drawable.lamp1_lo_on, R.drawable.lamp1_lo_off, false, true);
-        lamp_LB = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "links_boven", R.drawable.lamp1_lb_on, R.drawable.lamp1_lb_off, false, true);
+        lamp_R = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "rechts", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, true, 300, -500);
+        lamp_LO = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "links_onder", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, true,-300, -575);
+        lamp_LB = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "links_boven", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, true,-300, -425);
 
         lamp_M_Group.addLamp(lamp_R);
         lamp_M_Group.addLamp(lamp_LO);
         lamp_M_Group.addLamp(lamp_LB);
 
         lamp_M_Group.updateGroup();
-    }
-
-    private void setOnTouchListenerFloor(final View rootView){
-
-        final ImageView mask_IV = rootView.findViewById(R.id.maskView);
-        final ImageView floor_IV = rootView.findViewById(R.id.floorView);
-        floor_IV.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-
-                final int evX = (int) event.getX();
-                final int evY = (int) event.getY();
-
-                if(event.getAction() == MotionEvent.ACTION_UP){
-                    int touchColor = getHotspotColor (mask_IV, evX, evY);
-
-                    //Lamp 1 M
-                    if( -1236956 == touchColor) {
-                        if (mLONG_CLICK) {
-                            lamp_M_Group.toggleGroupmode();
-                            lamp_M_Group.updateGroup();
-                        } else {
-                            lamp_M_Group.toggle();
-                        }
-
-                    }else if( -3584 == touchColor){
-                        lamp_R.toggle();
-
-                    }else if( -16732433 == touchColor){
-                        lamp_LO.toggle();
-
-                    }else if( -12995254 == touchColor){
-                        lamp_LB.toggle();
-                    }else{
-                        Log.d(TAG, "Niewe kleur: " + touchColor);
-                    }
-
-                    mLONG_CLICK = false;
-                    return true;
-                }else if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    mLONG_CLICK = false;
-                }
-                return false;
-            }
-        });
-
-
-        floor_IV.setOnLongClickListener(new View.OnLongClickListener(){
-
-            @Override
-            public boolean onLongClick(View view) {
-                mLONG_CLICK = true;
-                return false;
-            }
-        });
-
-    }
-
-    private int getHotspotColor (View mask_IV, int x, int y) {
-        mask_IV.setDrawingCacheEnabled(true);
-        Bitmap hotspots = Bitmap.createBitmap(mask_IV.getDrawingCache());
-        mask_IV.setDrawingCacheEnabled(false);
-        return hotspots.getPixel(x, y);
     }
 
     private void setFloorTitle(View rootView){

@@ -2,6 +2,7 @@ package nl.nielshokke.huisapp.Items;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -28,10 +29,18 @@ public class LampGroup extends Lamp {
     List<Lamp> LampList;
     boolean isInGroupMode;
 
-    public LampGroup(Context context, RelativeLayout rootView, RequestQueue q, String urlName,  int srcOn, int srcOff, boolean on, boolean hidden, boolean groupMode){
-        super(context, null, rootView, q, urlName, srcOn, srcOff, on, hidden);
+    public LampGroup(Context context, RelativeLayout rootView, RequestQueue q, String urlName,  int srcOn, int srcOff, boolean on, boolean hidden, boolean groupMode, int default_x, int default_y){
+        super(context, null, rootView, q, urlName, srcOn, srcOff, on, hidden, default_x, default_y);
         LampList = new ArrayList<>();
         isInGroupMode = groupMode;
+        Lamp_IV.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View view) {
+                toggleGroupmode();
+                return false;
+            }
+        });
     }
 
     public void addLamp(Lamp lamp){
@@ -82,6 +91,7 @@ public class LampGroup extends Lamp {
 //        }
 //    }
 
+    @Override
     public void toggle(){
         if(isInGroupMode){
             if(isOn()){

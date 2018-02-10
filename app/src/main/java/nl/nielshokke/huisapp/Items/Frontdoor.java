@@ -41,26 +41,54 @@ public class Frontdoor {
     private boolean isInDevMode;
     private Activity mactivity;
 
-    public Frontdoor(Activity activity, RelativeLayout rootView, RequestQueue q){
+    public Frontdoor(final Activity activity, RelativeLayout rootView, RequestQueue q){
         DOOR_IV  = new ImageView(activity);
         ADD_CARD_IV  = new ImageView(activity);
         TEST_NOTIFICATION_IV = new ImageView(activity);
 
-        DOOR_IV.setImageResource(R.drawable.deur1_off);
-        DOOR_IV.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, R.id.floorView);
+        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, R.id.floorView);
+
+        DOOR_IV.setImageResource(R.drawable.deur_off);
+        DOOR_IV.setLayoutParams(layoutParams);
         DOOR_IV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        DOOR_IV.setX(75);
+        DOOR_IV.setY(-700);
+        DOOR_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                click();
+            }
+        });
         rootView.addView(DOOR_IV, 2);
 
-        ADD_CARD_IV.setImageResource(R.drawable.addcard_off);
-        ADD_CARD_IV.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ADD_CARD_IV.setImageResource(R.drawable.add_card_off);
+        ADD_CARD_IV.setLayoutParams(layoutParams);
         ADD_CARD_IV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ADD_CARD_IV.setX(-150);
+        ADD_CARD_IV.setY(-700);
+        ADD_CARD_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCardClick();
+            }
+        });
         rootView.addView(ADD_CARD_IV, 2);
 
         TEST_NOTIFICATION_IV.setImageResource(R.drawable.test_notification_on);
-        TEST_NOTIFICATION_IV.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        TEST_NOTIFICATION_IV.setLayoutParams(layoutParams);
         TEST_NOTIFICATION_IV.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        TEST_NOTIFICATION_IV.setVisibility(View.INVISIBLE);
+        TEST_NOTIFICATION_IV.setX(-150);
+        TEST_NOTIFICATION_IV.setY(-475);
+        TEST_NOTIFICATION_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                testNotificationClick();
+            }
+        });
         rootView.addView(TEST_NOTIFICATION_IV, 2);
+
 
         queue = q;
         isOnline = false;
@@ -76,15 +104,17 @@ public class Frontdoor {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        DOOR_IV.setImageResource(R.drawable.deur1_on);
-                        ADD_CARD_IV.setImageResource(R.drawable.addcard_on);
+                        //TODO recylcle
+//                        ((BitmapDrawable)imageView.getDrawable()).getBitmap().recycle();
+                        DOOR_IV.setImageResource(R.drawable.deur_on);
+                        ADD_CARD_IV.setImageResource(R.drawable.add_card_on);
                         isOnline = true;
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        DOOR_IV.setImageResource(R.drawable.deur1_off);
-                        ADD_CARD_IV.setImageResource(R.drawable.addcard_off);
+                        DOOR_IV.setImageResource(R.drawable.deur_off);
+                        ADD_CARD_IV.setImageResource(R.drawable.add_card_off);
                         isOnline = false;
                     }
         });

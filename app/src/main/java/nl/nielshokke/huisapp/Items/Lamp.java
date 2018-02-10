@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,7 +26,7 @@ public class Lamp {
 
     private boolean isOn;
     private boolean isHidden;
-    private ImageView Lamp_IV;
+    ImageView Lamp_IV;
     private int sourceOn;
     private int sourceOff;
 
@@ -35,7 +36,7 @@ public class Lamp {
     String subUrl;
     private LampGroup parentGroup;
 
-    public Lamp(Context context, LampGroup group, RelativeLayout rootView, RequestQueue q, String urlName,  int srcOn, int srcOff, boolean on, boolean hidden){
+    public Lamp(final Context context, LampGroup group, RelativeLayout rootView, RequestQueue q, String urlName, int srcOn, int srcOff, boolean on, boolean hidden, int default_x, int default_y){
         Lamp_IV = new ImageView(context);
         isHidden = hidden;
         isOn = on;
@@ -44,9 +45,19 @@ public class Lamp {
         queue = q;
         subUrl = urlName;
         parentGroup = group;
-
-        Lamp_IV.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, R.id.floorView);
+        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, R.id.floorView);
+        Lamp_IV.setLayoutParams(layoutParams);
+        Lamp_IV.setX(default_x);
+        Lamp_IV.setY(default_y);
         Lamp_IV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Lamp_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggle();
+            }
+        });
         rootView.addView(Lamp_IV, 2);
 
         setView();

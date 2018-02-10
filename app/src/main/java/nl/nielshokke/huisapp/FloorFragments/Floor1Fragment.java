@@ -2,6 +2,7 @@ package nl.nielshokke.huisapp.FloorFragments;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -62,14 +63,14 @@ public class Floor1Fragment  extends Fragment {
     }
 
     private void loadFloor(RelativeLayout rootView){
-        ImageView floor_IV = rootView.findViewById(R.id.floorView);
-        floor_IV.setImageResource(R.drawable.floor1);
 
-        ImageView mask_IV = rootView.findViewById(R.id.maskView);
-        mask_IV.setImageResource(R.drawable.mapfloor1);
+        ImageView floor_IV = rootView.findViewById(R.id.floorView);
+        if(floor_IV != null) {
+//            ((BitmapDrawable)floor_IV.getDrawable()).getBitmap().recycle();
+            floor_IV.setImageResource(R.drawable.floor1);
+        }
 
         setItemsFloor(rootView);
-        setOnTouchListenerFloor(rootView);
     }
 
     private void setItemsFloor(RelativeLayout rootView){
@@ -77,56 +78,56 @@ public class Floor1Fragment  extends Fragment {
         FRONT_DOOR.setDevMode(true);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void setOnTouchListenerFloor(final View rootView){
-
-        final ImageView mask_IV = rootView.findViewById(R.id.maskView);
-        final ImageView floor_IV = rootView.findViewById(R.id.floorView);
-        floor_IV.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-
-                final int evX = (int) event.getX();
-                final int evY = (int) event.getY();
-
-                if(event.getAction() == MotionEvent.ACTION_UP){
-                    int touchColor = getHotspotColor (mask_IV, evX, evY);
-
-                    //Lamp 1 M
-                    if( -1236956 == touchColor) {
-                        if (mLONG_CLICK) {
-
-                        } else {
-                            FRONT_DOOR.click();
-                        }
-                    }else if(-9847483 == touchColor){
-                        FRONT_DOOR.addCardClick();
-
-                    }else if(-595180 == touchColor){
-//                        FRONT_DOOR.testNotificationClick();
-                        FRONT_DOOR.simulateDingDongClick();
-
-                    }else{
-                        Log.d(TAG, "Niewe kleur: " + touchColor);
-                    }
-                    mLONG_CLICK = false;
-                    return true;
-                }else if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    mLONG_CLICK = false;
-                }
-                return false;
-            }
-        });
-
-        floor_IV.setOnLongClickListener(new View.OnLongClickListener(){
-
-            @Override
-            public boolean onLongClick(View view) {
-                mLONG_CLICK = true;
-                return false;
-            }
-        });
-
-    }
+//    @SuppressLint("ClickableViewAccessibility")
+//    private void setOnTouchListenerFloor(final View rootView){
+//
+//        final ImageView mask_IV = rootView.findViewById(R.id.maskView);
+//        final ImageView floor_IV = rootView.findViewById(R.id.floorView);
+//        floor_IV.setOnTouchListener(new View.OnTouchListener() {
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                final int evX = (int) event.getX();
+//                final int evY = (int) event.getY();
+//
+//                if(event.getAction() == MotionEvent.ACTION_UP){
+//                    int touchColor = getHotspotColor (mask_IV, evX, evY);
+//
+//                    //Lamp 1 M
+//                    if( -1236956 == touchColor) {
+//                        if (mLONG_CLICK) {
+//
+//                        } else {
+//                            FRONT_DOOR.click();
+//                        }
+//                    }else if(-9847483 == touchColor){
+//                        FRONT_DOOR.addCardClick();
+//
+//                    }else if(-595180 == touchColor){
+////                        FRONT_DOOR.testNotificationClick();
+//                        FRONT_DOOR.simulateDingDongClick();
+//
+//                    }else{
+//                        Log.d(TAG, "Niewe kleur: " + touchColor);
+//                    }
+//                    mLONG_CLICK = false;
+//                    return true;
+//                }else if(event.getAction() == MotionEvent.ACTION_DOWN){
+//                    mLONG_CLICK = false;
+//                }
+//                return false;
+//            }
+//        });
+//
+//        floor_IV.setOnLongClickListener(new View.OnLongClickListener(){
+//
+//            @Override
+//            public boolean onLongClick(View view) {
+//                mLONG_CLICK = true;
+//                return false;
+//            }
+//        });
+//
+//    }
 
     private int getHotspotColor (View mask_IV, int x, int y) {
         mask_IV.setDrawingCacheEnabled(true);
