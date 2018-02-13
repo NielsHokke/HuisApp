@@ -1,7 +1,10 @@
 package nl.nielshokke.huisapp.Items;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -18,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.nielshokke.huisapp.Dialogs.ColorLampDialogFragment;
 import nl.nielshokke.huisapp.R;
 
 /**
@@ -29,7 +33,7 @@ public class LampGroup extends Lamp {
     List<Lamp> LampList;
     boolean isInGroupMode;
 
-    public LampGroup(Context context, RelativeLayout rootView, RequestQueue q, String urlName,  int srcOn, int srcOff, boolean on, boolean hidden, boolean groupMode, int default_x, int default_y){
+    public LampGroup(final Context context, RelativeLayout rootView, RequestQueue q, String urlName, int srcOn, int srcOff, boolean on, boolean hidden, boolean groupMode, int default_x, int default_y){
         super(context, null, rootView, q, urlName, srcOn, srcOff, on, hidden, default_x, default_y);
         LampList = new ArrayList<>();
         isInGroupMode = groupMode;
@@ -38,7 +42,7 @@ public class LampGroup extends Lamp {
             @Override
             public boolean onLongClick(View view) {
                 toggleGroupmode();
-                return false;
+                return true;
             }
         });
     }
@@ -46,50 +50,6 @@ public class LampGroup extends Lamp {
     public void addLamp(Lamp lamp){
         LampList.add(lamp);
     }
-
-//    public void on(){
-//        if(isInGroupMode){
-//            StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=all_aan",
-//                    new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//                            setOn(true);
-//                            setView();
-//                            for(Lamp lamp : LampList){
-//                                lamp.displayOn("");
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {}
-//            });
-//            queue.add(stringRequest);
-//        }else{
-//            super.on();
-//        }
-//    }
-//
-//    public void off(){
-//        if(isInGroupMode){
-//            StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=all_uit",
-//                    new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//                            setOn(false);
-//                            setView();
-//                            for(Lamp lamp : LampList){
-//                                lamp.displayOff("");
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {}
-//            });
-//            queue.add(stringRequest);
-//        }else{
-//            super.off();
-//        }
-//    }
 
     @Override
     public void toggle(){

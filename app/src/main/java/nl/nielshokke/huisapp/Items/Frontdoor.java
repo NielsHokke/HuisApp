@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.NotificationCompat;
@@ -18,6 +19,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import nl.nielshokke.huisapp.Notification.FrontdoorNotification;
 import nl.nielshokke.huisapp.R;
@@ -84,6 +89,7 @@ public class Frontdoor {
         TEST_NOTIFICATION_IV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO if home simulate DINGDONG
                 testNotificationClick();
             }
         });

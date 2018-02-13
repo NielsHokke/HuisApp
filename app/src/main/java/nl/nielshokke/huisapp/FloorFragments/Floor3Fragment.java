@@ -17,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import nl.nielshokke.huisapp.Items.Lamp;
+import nl.nielshokke.huisapp.Items.LampColor;
 import nl.nielshokke.huisapp.Items.LampGroup;
 import nl.nielshokke.huisapp.R;
 
@@ -31,6 +32,7 @@ public class Floor3Fragment extends Fragment {
     private Lamp lamp_R;
     private Lamp lamp_LO;
     private Lamp lamp_LB;
+    private Lamp lamp_Co;
 
     private boolean mLONG_CLICK = false;
 
@@ -73,6 +75,8 @@ public class Floor3Fragment extends Fragment {
         lamp_R = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "rechts", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, true, 300, -500);
         lamp_LO = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "links_onder", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, true,-300, -575);
         lamp_LB = new Lamp(getActivity(), lamp_M_Group, rootView, queue, "links_boven", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, true,-300, -425);
+
+        lamp_Co = new LampColor(getActivity(), lamp_M_Group, rootView, queue, "niks", R.drawable.lamp_color_on, R.drawable.lamp_klein_off, true, false, 0,-650);
 
         lamp_M_Group.addLamp(lamp_R);
         lamp_M_Group.addLamp(lamp_LO);
