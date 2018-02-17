@@ -80,7 +80,18 @@ public class ColorLampDialogFragment extends DialogFragment {
                 int G = ColorP.getSelectedColor() >> 8 & 0xFF;
                 int B = ColorP.getSelectedColor() >> 0 & 0xFF;
 
-                Toast.makeText(getActivity(), "Setting color: R " + R + " G " + G + " B " + B , Toast.LENGTH_SHORT).show();
+                String SR = String.format("%03d", R);
+                String SG = String.format("%03d", G);
+                String SB = String.format("%03d", B);
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=setColor_" + SR + "_" + SG + "_"  + SB, new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String s){}
+                }, new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError){}
+                });
+                queue.add(stringRequest);
             }
         });
 
@@ -91,21 +102,46 @@ public class ColorLampDialogFragment extends DialogFragment {
                 int G = ColorP.getSelectedColor() >> 8 & 0xFF;
                 int B = ColorP.getSelectedColor() >> 0 & 0xFF;
 
-                Toast.makeText(getActivity(), "Fading to color: R " + R + " G " + G + " B " + B , Toast.LENGTH_SHORT).show();
+                String SR = String.format("%03d", R);
+                String SG = String.format("%03d", G);
+                String SB = String.format("%03d", B);
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=fadeToColor_" + SR + "_" + SG + "_"  + SB + "_000_010_000", new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String s){}
+                }, new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError){}
+                });
+                queue.add(stringRequest);
             }
         });
 
         Rainbow_BT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Rainbow" , Toast.LENGTH_SHORT).show();
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=rainbow", new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String s){}
+                }, new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError){}
+                });
+                queue.add(stringRequest);
             }
         });
 
         Clear_BT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Clear" , Toast.LENGTH_SHORT).show();
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=clear", new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String s){}
+                }, new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError){}
+                });
+                queue.add(stringRequest);
             }
         });
     }
