@@ -1,9 +1,11 @@
 package nl.nielshokke.huisapp.FloorFragments;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +50,13 @@ public class Floor1Fragment  extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        FRONT_DOOR.setDevMode(sharedPref.getBoolean("dev_options", false));
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_floor, container, false);
@@ -75,65 +84,8 @@ public class Floor1Fragment  extends Fragment {
 
     private void setItemsFloor(RelativeLayout rootView){
         FRONT_DOOR = new Frontdoor(getActivity(), rootView, queue);
-        FRONT_DOOR.setDevMode(true);
-    }
-
-//    @SuppressLint("ClickableViewAccessibility")
-//    private void setOnTouchListenerFloor(final View rootView){
-//
-//        final ImageView mask_IV = rootView.findViewById(R.id.maskView);
-//        final ImageView floor_IV = rootView.findViewById(R.id.floorView);
-//        floor_IV.setOnTouchListener(new View.OnTouchListener() {
-//            public boolean onTouch(View v, MotionEvent event) {
-//
-//                final int evX = (int) event.getX();
-//                final int evY = (int) event.getY();
-//
-//                if(event.getAction() == MotionEvent.ACTION_UP){
-//                    int touchColor = getHotspotColor (mask_IV, evX, evY);
-//
-//                    //Lamp 1 M
-//                    if( -1236956 == touchColor) {
-//                        if (mLONG_CLICK) {
-//
-//                        } else {
-//                            FRONT_DOOR.click();
-//                        }
-//                    }else if(-9847483 == touchColor){
-//                        FRONT_DOOR.addCardClick();
-//
-//                    }else if(-595180 == touchColor){
-////                        FRONT_DOOR.testNotificationClick();
-//                        FRONT_DOOR.simulateDingDongClick();
-//
-//                    }else{
-//                        Log.d(TAG, "Niewe kleur: " + touchColor);
-//                    }
-//                    mLONG_CLICK = false;
-//                    return true;
-//                }else if(event.getAction() == MotionEvent.ACTION_DOWN){
-//                    mLONG_CLICK = false;
-//                }
-//                return false;
-//            }
-//        });
-//
-//        floor_IV.setOnLongClickListener(new View.OnLongClickListener(){
-//
-//            @Override
-//            public boolean onLongClick(View view) {
-//                mLONG_CLICK = true;
-//                return false;
-//            }
-//        });
-//
-//    }
-
-    private int getHotspotColor (View mask_IV, int x, int y) {
-        mask_IV.setDrawingCacheEnabled(true);
-        Bitmap hotspots = Bitmap.createBitmap(mask_IV.getDrawingCache());
-        mask_IV.setDrawingCacheEnabled(false);
-        return hotspots.getPixel(x, y);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        FRONT_DOOR.setDevMode(sharedPref.getBoolean("dev_options", false));
     }
 
     private void setFloorTitle(View rootView){

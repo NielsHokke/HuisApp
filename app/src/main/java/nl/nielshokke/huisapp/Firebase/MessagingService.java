@@ -62,8 +62,15 @@ public class MessagingService extends FirebaseMessagingService {
                 e.printStackTrace();
             }
 
-            FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
-            notification.show(bm,time, test);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+            if(test || sharedPref.getBoolean("dev_options", false)){
+                FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
+                notification.show(bm,time, test);
+            }else{
+                FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
+                notification.show(bm,time, test);
+            }
         }
 
         // Check if message contains a notification payload.

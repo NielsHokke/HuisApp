@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -18,11 +19,20 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.SystemClock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.util.Calendar;
 
@@ -46,15 +56,32 @@ public class FrontdoorNotification {
     private static final String OPEN_DOOR_TAG = "Sesam, open u";
     private static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID = "my_notification_channel";
+    private static final String TAG = "notification";
+
+    private boolean isOnline = false;
+    private Bitmap Rbm = null;
+    private String Rtime = null;
+    private Boolean Ristest = null;
 
     public FrontdoorNotification(Context context){
         mContext = context;
     }
 
     public void show(Bitmap bm, String time, Boolean istest){
+        Rbm = bm;
+        Rtime = time;
+        Ristest = istest;
         // Sets an ID for the notification
-        int mNotificationId = 1;
-        SharedPreferences sharedPref = mContext.getSharedPreferences(FRONTDOOR_NOTIFICATION_SETTINGS, MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        int notifiSetting = Integer.parseInt(sharedPref.getString("pref_notification_type", "1"));
+        Log.d(TAG, "nofity setting: " + notifiSetting);
+        if(notifiSetting == 3){
+            return;
+        }else if(notifiSetting == 2){
+            checkIfOnline();
+            return;
+        }
 
         long elapsedtime = 0;
         if(time.equals("")){
@@ -88,6 +115,10 @@ public class FrontdoorNotification {
         //loading remote views
         RemoteViews bigremoteViews = new RemoteViews(mContext.getPackageName(), R.layout.notification_frontdoor);//R.layout.custom_notification
 
+        if(isOnline){
+            bigremoteViews.setBoolean(R.id.openButton, "setEnabled", true);
+        }
+
         if(bm == null){
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.voordeur_test_foto);
         }
@@ -98,37 +129,35 @@ public class FrontdoorNotification {
         bigremoteViews.setTextViewText(R.id.chronometerTime, time.replace("-",":"));
         bigremoteViews.setChronometer(R.id.chronometerTimer, elapsedtime + SystemClock.elapsedRealtime(), null, true);
 
-        //TODO check if local
-//        if(isLocal){
-            bigremoteViews.setBoolean(R.id.openButton, "setEnabled", true);
-//        }
-
-
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Ding Dong frontdoor", NotificationManager.IMPORTANCE_DEFAULT);
+
 
             // Configure the notification channel.
             notificationChannel.setDescription("Channel description 1");
             notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.enableVibration(true);
+            notificationChannel.setLightColor(R.color.purple);
+            notificationChannel.enableVibration(false);
 
-            if(sharedPref.getBoolean("pref_vibrate", true)){
-                notificationChannel.setVibrationPattern(new long[] { 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200 });
-            }
+            Log.d(TAG, "pref_vibrate: " + sharedPref.getBoolean("pref_vibrate", true));
+            Log.d(TAG, "pref_sound: " + sharedPref.getBoolean("pref_sound", true));
 
-            if(sharedPref.getBoolean("pref_sound", true)){
-                AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                        .build();
-                Uri sound = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.frontdoor_notification_sound);
-                notificationChannel.setSound(sound, audioAttributes);
-                notificationManager.createNotificationChannel(notificationChannel);
+            // So is only done once
+            if(!isOnline) {
+                if (sharedPref.getBoolean("pref_vibrate", true)) {
+                    // play vibration
+                    Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(VibrationEffect.createWaveform(new long[]{200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200}, -1));
+                }
+
+                if (sharedPref.getBoolean("pref_sound", true)) {
+                    // play sound
+                    MediaPlayer mp = MediaPlayer.create(mContext, R.raw.frontdoor_notification_sound);
+                    mp.start();
+                }
             }
 
             notificationManager.createNotificationChannel(notificationChannel);
@@ -153,14 +182,14 @@ public class FrontdoorNotification {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }else{
             NotificationCompat.Builder builder = new android.support.v7.app.NotificationCompat.Builder(mContext)
-                .setStyle(new android.support.v7.app.NotificationCompat.DecoratedCustomViewStyle())
-                .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                .setCustomBigContentView(bigremoteViews)
-                .setContentText("someone's at the door")
-                .setSmallIcon(R.drawable.ic_door_icon)
-                .setAutoCancel(true)
-                .setPriority(android.support.v7.app.NotificationCompat.PRIORITY_MAX)
-                .setContentIntent(resultPendingIntent);
+                    .setStyle(new android.support.v7.app.NotificationCompat.DecoratedCustomViewStyle())
+                    .setColor(mContext.getResources().getColor(R.color.colorPrimary))
+                    .setCustomBigContentView(bigremoteViews)
+                    .setContentText("someone's at the door")
+                    .setSmallIcon(R.drawable.ic_door_icon)
+                    .setAutoCancel(true)
+                    .setPriority(android.support.v7.app.NotificationCompat.PRIORITY_MAX)
+                    .setContentIntent(resultPendingIntent);
 
             if(istest){
                 builder.setContentTitle("Ding Dong. This is a Test");
@@ -173,10 +202,31 @@ public class FrontdoorNotification {
             }
             if(sharedPref.getBoolean("pref_sound", true)){
                 Uri sound = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.frontdoor_notification_sound);
-                //builder.setSound(sound);
+                builder.setSound(sound);
             }
 
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
+
+        if(!isOnline){
+            checkIfOnline();
+        }
+    }
+    public void checkIfOnline(){
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.200/cgi-bin/isOnline.py",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        isOnline = true;
+                        show(Rbm, Rtime, Ristest);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                isOnline = false;
+            }
+        });
+        queue.add(stringRequest);
     }
 }

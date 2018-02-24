@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -89,7 +90,6 @@ public class Frontdoor {
         TEST_NOTIFICATION_IV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO if home simulate DINGDONG
                 testNotificationClick();
             }
         });
@@ -144,10 +144,14 @@ public class Frontdoor {
     }
 
     public void testNotificationClick(){
-
-        FrontdoorNotification notification = new FrontdoorNotification(mactivity.getBaseContext());
-        notification.show(null,"", true);
-
+        Log.d("notification", "isInDevMode: " + isInDevMode + " isOnline: " + isOnline);
+        if(isInDevMode && isOnline){
+            simulateDingDongClick();
+        }else{
+            FrontdoorNotification notification = new FrontdoorNotification(mactivity.getBaseContext());
+            notification.show(null,"", true);
+            checkIfOnline();
+        }
     }
 
     public void simulateDingDongClick(){
@@ -169,9 +173,6 @@ public class Frontdoor {
 
     public void setDevMode(Boolean devMode){
         isInDevMode = devMode;
-        if(isInDevMode){
-            TEST_NOTIFICATION_IV.setVisibility(View.VISIBLE);
-        }
     }
 
     public void showFrontDoorDialog(){
