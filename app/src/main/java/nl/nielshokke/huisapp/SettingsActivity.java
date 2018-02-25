@@ -11,6 +11,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.widget.Toast;
 
 
@@ -87,23 +88,23 @@ public class SettingsActivity extends PreferenceActivity {
         private void addDevRemoveOption(){
             PreferenceCategory cat_about_app = (PreferenceCategory) findPreference("pref_about_app");
 
-            CheckBoxPreference checkBoxPref = new CheckBoxPreference(getActivity());
-            checkBoxPref.setTitle("Developer options");
+            SwitchPreference switchPref = new SwitchPreference(getActivity());
+            switchPref.setTitle("Developer options");
 
-            checkBoxPref.setChecked(true);
-            checkBoxPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            switchPref.setChecked(true);
+            switchPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
-                    CheckBoxPreference checkBoxPref = (CheckBoxPreference) preference;
+                    SwitchPreference switchPref = (SwitchPreference) preference;
                     Boolean isChecked = (Boolean) o;
                     if(isChecked){
-                        checkBoxPref.setSummary("");
+                        switchPref.setSummary("");
                         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putBoolean("dev_options", true);
                         editor.apply();
                     }else{
-                        checkBoxPref.setSummary("Go back to main screen to save");
+                        switchPref.setSummary("Go back to main screen to save");
                         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putBoolean("dev_options", false);
@@ -114,7 +115,7 @@ public class SettingsActivity extends PreferenceActivity {
             });
 
 
-            cat_about_app.addPreference(checkBoxPref);
+            cat_about_app.addPreference(switchPref);
         }
     }
 }

@@ -41,6 +41,7 @@ public class Frontdoor {
     private ImageView DOOR_IV;
     private ImageView ADD_CARD_IV;
     private ImageView TEST_NOTIFICATION_IV;
+    private ImageView GENERATE_QR_CODE;
 
     private RequestQueue queue;
     private boolean isOnline;
@@ -51,6 +52,7 @@ public class Frontdoor {
         DOOR_IV  = new ImageView(activity);
         ADD_CARD_IV  = new ImageView(activity);
         TEST_NOTIFICATION_IV = new ImageView(activity);
+        GENERATE_QR_CODE = new ImageView(activity);
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, R.id.floorView);
@@ -94,6 +96,22 @@ public class Frontdoor {
             }
         });
         rootView.addView(TEST_NOTIFICATION_IV, 2);
+
+
+        GENERATE_QR_CODE.setImageResource(R.drawable.generate_qr_on);
+        GENERATE_QR_CODE.setLayoutParams(layoutParams);
+        GENERATE_QR_CODE.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        GENERATE_QR_CODE.setX(-150);
+        GENERATE_QR_CODE.setY(-250);
+        GENERATE_QR_CODE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Frontdoor", "generate QR-code");
+            }
+        });
+        rootView.addView(GENERATE_QR_CODE, 2);
+
+
 
 
         queue = q;
@@ -149,7 +167,7 @@ public class Frontdoor {
             simulateDingDongClick();
         }else{
             FrontdoorNotification notification = new FrontdoorNotification(mactivity.getBaseContext());
-            notification.show(null,"", true);
+            notification.show(null,"", true, false);
             checkIfOnline();
         }
     }
@@ -168,8 +186,6 @@ public class Frontdoor {
         queue.add(stringRequest);
 
     }
-
-
 
     public void setDevMode(Boolean devMode){
         isInDevMode = devMode;

@@ -64,12 +64,14 @@ public class MessagingService extends FirebaseMessagingService {
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-            if(test || sharedPref.getBoolean("dev_options", false)){
-                FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
-                notification.show(bm,time, test);
+            if(test){
+                if(sharedPref.getBoolean("dev_options", false)){
+                    FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
+                    notification.show(bm,time, test, false);
+                }
             }else{
                 FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
-                notification.show(bm,time, test);
+                notification.show(bm,time, test, false);
             }
         }
 

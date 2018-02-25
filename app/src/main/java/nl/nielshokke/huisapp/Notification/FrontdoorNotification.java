@@ -67,7 +67,7 @@ public class FrontdoorNotification {
         mContext = context;
     }
 
-    public void show(Bitmap bm, String time, Boolean istest){
+    public void show(Bitmap bm, String time, Boolean istest, Boolean update){
         Rbm = bm;
         Rtime = time;
         Ristest = istest;
@@ -78,7 +78,7 @@ public class FrontdoorNotification {
         Log.d(TAG, "nofity setting: " + notifiSetting);
         if(notifiSetting == 3){
             return;
-        }else if(notifiSetting == 2){
+        }else if(notifiSetting == 2 && !update){
             checkIfOnline();
             return;
         }
@@ -145,20 +145,19 @@ public class FrontdoorNotification {
             Log.d(TAG, "pref_vibrate: " + sharedPref.getBoolean("pref_vibrate", true));
             Log.d(TAG, "pref_sound: " + sharedPref.getBoolean("pref_sound", true));
 
-            // So is only done once
-            if(!isOnline) {
-                if (sharedPref.getBoolean("pref_vibrate", true)) {
-                    // play vibration
-                    Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                    vibrator.vibrate(VibrationEffect.createWaveform(new long[]{200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200}, -1));
-                }
 
-                if (sharedPref.getBoolean("pref_sound", true)) {
-                    // play sound
-                    MediaPlayer mp = MediaPlayer.create(mContext, R.raw.frontdoor_notification_sound);
-                    mp.start();
-                }
+            if (sharedPref.getBoolean("pref_vibrate", true)) {
+                // play vibration
+                Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(VibrationEffect.createWaveform(new long[]{200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200, 100, 200}, -1));
             }
+
+            if (sharedPref.getBoolean("pref_sound", true)) {
+                // play sound
+                MediaPlayer mp = MediaPlayer.create(mContext, R.raw.frontdoor_notification_sound);
+                mp.start();
+            }
+
 
             notificationManager.createNotificationChannel(notificationChannel);
 
@@ -219,7 +218,7 @@ public class FrontdoorNotification {
                     @Override
                     public void onResponse(String response) {
                         isOnline = true;
-                        show(Rbm, Rtime, Ristest);
+                        show(Rbm, Rtime, Ristest, true);
                     }
                 }, new Response.ErrorListener() {
             @Override

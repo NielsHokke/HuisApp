@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import nl.nielshokke.huisapp.QRcode.QRgenerator;
 import nl.nielshokke.huisapp.R;
 
 /**
@@ -24,8 +25,6 @@ import nl.nielshokke.huisapp.R;
 
 public class Floor2Fragment extends Fragment {
     private static final String TAG = "Floor 2 Fragment";
-
-    private boolean mLONG_CLICK = false;
 
     private RequestQueue queue;
 
@@ -51,67 +50,18 @@ public class Floor2Fragment extends Fragment {
         loadFloor((RelativeLayout) rootView);
         setFloorTitle(rootView);
 
+
         return rootView;
     }
 
     private void loadFloor(RelativeLayout rootView){
         ImageView floor_IV = rootView.findViewById(R.id.floorView);
         floor_IV.setImageResource(R.drawable.floor2);
-//        setItemsFloor(rootView);
+        setItemsFloor(rootView);
     }
 
     private void setItemsFloor(RelativeLayout rootView){
 
-    }
-
-//    private void setOnTouchListenerFloor(final View rootView){
-//
-//        final ImageView mask_IV = rootView.findViewById(R.id.maskView);
-//        final ImageView floor_IV = rootView.findViewById(R.id.floorView);
-//
-//        floor_IV.setOnTouchListener(new View.OnTouchListener() {
-//            public boolean onTouch(View v, MotionEvent event) {
-//
-//                final int evX = (int) event.getX();
-//                final int evY = (int) event.getY();
-//
-//                if(event.getAction() == MotionEvent.ACTION_UP){
-//                    int touchColor = getHotspotColor (mask_IV, evX, evY);
-//
-//                    //Lamp 1 M
-//                    if( -1236956 == touchColor) {
-//                        if (mLONG_CLICK) {
-//
-//                        } else {
-//
-//                        }
-//                    }
-//                    mLONG_CLICK = false;
-//                    return true;
-//                }else if(event.getAction() == MotionEvent.ACTION_DOWN){
-//                    mLONG_CLICK = false;
-//                }
-//                return false;
-//            }
-//        });
-//
-//
-//        floor_IV.setOnLongClickListener(new View.OnLongClickListener(){
-//
-//            @Override
-//            public boolean onLongClick(View view) {
-//                mLONG_CLICK = true;
-//                return false;
-//            }
-//        });
-//
-//    }
-
-    private int getHotspotColor (View mask_IV, int x, int y) {
-        mask_IV.setDrawingCacheEnabled(true);
-        Bitmap hotspots = Bitmap.createBitmap(mask_IV.getDrawingCache());
-        mask_IV.setDrawingCacheEnabled(false);
-        return hotspots.getPixel(x, y);
     }
 
     private void setFloorTitle(View rootView){

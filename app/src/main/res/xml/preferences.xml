@@ -11,11 +11,11 @@
             android:entries="@array/notify_me_options"
             android:entryValues="@array/notify_me_values"
             android:defaultValue="1" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="pref_vibrate"
             android:title="Vibrate"
             android:defaultValue="true"/>
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="pref_sound"
             android:title="Sound"
             android:defaultValue="true"/>
