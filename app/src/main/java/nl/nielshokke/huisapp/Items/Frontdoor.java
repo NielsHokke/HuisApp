@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -106,7 +107,37 @@ public class Frontdoor {
         GENERATE_QR_CODE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Frontdoor", "generate QR-code");
+
+
+                final Handler handler = new Handler();
+                final int[] counter = {0};
+
+                Runnable r = new Runnable() {
+                    public void run() {
+//                        Log.d("Frontdoor", "generate QR-code");
+//                        counter[0]++;
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=test_" + counter[0]++,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        Log.d("Test", "response: " + counter[0]);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {}
+                        });
+                        queue.add(stringRequest);
+
+
+                        if (counter[0] < 10){
+                            handler.postDelayed(this, 100);
+                        }
+                    }
+                };
+
+                handler.postDelayed(r, 0);
+
+
             }
         });
         rootView.addView(GENERATE_QR_CODE, 2);
@@ -144,6 +175,8 @@ public class Frontdoor {
         });
         queue.add(stringRequest);
     }
+
+
 
     public void click(){
         if(isOnline){

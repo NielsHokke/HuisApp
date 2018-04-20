@@ -59,11 +59,7 @@ public class LampGroup extends Lamp {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                setOn(false);
-                                setView();
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOff("");
-                                }
+                                updateGroup(response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -75,11 +71,7 @@ public class LampGroup extends Lamp {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                setOn(true);
-                                setView();
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOn("");
-                                }
+                                updateGroup(response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -111,68 +103,70 @@ public class LampGroup extends Lamp {
         }
     }
 
+    public void setGroup(String statusString){
+        try {
+            JSONObject jObject = new JSONObject(statusString);
+
+
+
+            if(Float.valueOf(jObject.getString("Rechts")) > 0){
+                for(Lamp lamp : LampList){
+                    lamp.displayOn("rechts");
+                }
+            }else{
+                for(Lamp lamp : LampList){
+                    lamp.displayOff("rechts");
+                }
+            }
+
+            if(Float.valueOf(jObject.getString("Midden")) > 0){
+                setOn(true);
+            }else{
+                setOn(false);
+            }
+
+            if(Float.valueOf(jObject.getString("LinksOnder")) > 0){
+                for(Lamp lamp : LampList){
+                    lamp.displayOn("links_onder");
+                }
+            }else{
+                for(Lamp lamp : LampList){
+                    lamp.displayOff("links_onder");
+                }
+            }
+
+            if(Float.valueOf(jObject.getString("LinksBoven")) > 0){
+                for(Lamp lamp : LampList){
+                    lamp.displayOn("links_boven");
+                }
+            }else{
+                for(Lamp lamp : LampList){
+                    lamp.displayOff("links_boven");
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
-    public void updateGroup(){
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=status",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jObject = new JSONObject(response);
+    public void updateGroup(String statusString){
 
-                            if((jObject.getString("all").equals("on") && isInGroupMode) || (jObject.getString("midden").equals("on") && !isInGroupMode)){
-                                LampGroup.super.displayOn("");
-                            }else if((jObject.getString("all").equals("off") && isInGroupMode)|| (jObject.getString("midden").equals("off") && !isInGroupMode)){
-                                LampGroup.super.displayOff("");
-                            }
-
-                            if(jObject.getString("rechts").equals("on")){
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOn("rechts");
-                                }
-                            }else{
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOff("rechts");
-                                }
-                            }
-
-                            if(jObject.getString("midden").equals("on")){
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOn("midden");
-                                }
-                            }else{
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOff("midden");
-                                }
-                            }
-
-                            if(jObject.getString("links_onder").equals("on")){
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOn("links_onder");
-                                }
-                            }else{
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOff("links_onder");
-                                }
-                            }
-
-                            if(jObject.getString("links_boven").equals("on")){
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOn("links_boven");
-                                }
-                            }else{
-                                for(Lamp lamp : LampList){
-                                    lamp.displayOff("links_boven");
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        if(statusString == null){
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=status",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            setGroup(response);
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {}
-        });
-        queue.add(stringRequest);
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {}
+            });
+            queue.add(stringRequest);
+        }else{
+            setGroup(statusString);
+        }
     }
 }

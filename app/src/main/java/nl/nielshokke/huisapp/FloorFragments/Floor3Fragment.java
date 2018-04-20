@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import nl.nielshokke.huisapp.Items.Fan;
 import nl.nielshokke.huisapp.Items.Lamp;
 import nl.nielshokke.huisapp.Items.LampColor;
 import nl.nielshokke.huisapp.Items.LampGroup;
@@ -33,6 +34,8 @@ public class Floor3Fragment extends Fragment {
     private Lamp lamp_LO;
     private Lamp lamp_LB;
     private Lamp lamp_Co;
+
+    private Fan fan;
 
     private boolean mLONG_CLICK = false;
 
@@ -82,7 +85,9 @@ public class Floor3Fragment extends Fragment {
         lamp_M_Group.addLamp(lamp_LO);
         lamp_M_Group.addLamp(lamp_LB);
 
-        lamp_M_Group.updateGroup();
+        fan = new Fan(getActivity(), rootView, queue, "set_fan", R.drawable.fan_on, R.drawable.fan_off, false, false, -150, -340);
+
+        lamp_M_Group.updateGroup(null);
     }
 
     private void setFloorTitle(View rootView){

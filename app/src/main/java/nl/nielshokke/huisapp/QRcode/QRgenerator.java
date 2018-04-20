@@ -15,6 +15,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class QRgenerator {
 
+// encrypted [ (ID of generator) (time of creation) (time of termination) (name of reciever)
     public Bitmap generate(String data){
         QRCodeWriter writer = new QRCodeWriter();
         Bitmap bmp = null;

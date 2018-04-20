@@ -84,7 +84,7 @@ public class ColorLampDialogFragment extends DialogFragment {
                 String SG = String.format("%03d", G);
                 String SB = String.format("%03d", B);
 
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=setColor_" + SR + "_" + SG + "_"  + SB, new Response.Listener<String>(){
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=set_color_" + SR + "_" + SG + "_"  + SB, new Response.Listener<String>(){
                     @Override
                     public void onResponse(String s){}
                 }, new Response.ErrorListener(){
@@ -106,7 +106,7 @@ public class ColorLampDialogFragment extends DialogFragment {
                 String SG = String.format("%03d", G);
                 String SB = String.format("%03d", B);
 
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=fadeToColor_" + SR + "_" + SG + "_"  + SB + "_000_010_000", new Response.Listener<String>(){
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=fade_to_color_" + SR + "_" + SG + "_"  + SB + "_2", new Response.Listener<String>(){
                     @Override
                     public void onResponse(String s){}
                 }, new Response.ErrorListener(){
@@ -120,7 +120,7 @@ public class ColorLampDialogFragment extends DialogFragment {
         Rainbow_BT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=rainbow", new Response.Listener<String>(){
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=rainbow", new Response.Listener<String>(){
                     @Override
                     public void onResponse(String s){}
                 }, new Response.ErrorListener(){
@@ -134,7 +134,7 @@ public class ColorLampDialogFragment extends DialogFragment {
         Clear_BT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/RGB_Bridge.py?cmd=clear", new Response.Listener<String>(){
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=clear", new Response.Listener<String>(){
                     @Override
                     public void onResponse(String s){}
                 }, new Response.ErrorListener(){

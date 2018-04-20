@@ -38,7 +38,7 @@ import nl.nielshokke.huisapp.R;
  * Created by Nelis on 21-10-2017.
  */
 
-public class FrontDoorDialogFragment  extends DialogFragment {
+public class FrontDoorDialogFragment extends DialogFragment {
 
     private String TAG = "FrontDoorDialogFragment";
     private RequestQueue queue;

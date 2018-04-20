@@ -69,6 +69,7 @@ public class Lamp {
 
     protected void setOn(boolean on) {
         isOn = on;
+        setView();
     }
 
     public void on(){
@@ -77,10 +78,7 @@ public class Lamp {
                     @Override
                     public void onResponse(String response) {
                         isOn = true;
-                        setView();
-                        if(response.contains("aan -")){
-                            updateGroup();
-                        }
+                        updateGroup(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -95,10 +93,7 @@ public class Lamp {
                     @Override
                     public void onResponse(String response) {
                         isOn = false;
-                        setView();
-                        if(response.contains("uit -")){
-                            updateGroup();
-                        }
+                        updateGroup(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -128,8 +123,8 @@ public class Lamp {
 //        queue.add(stringRequest);
     }
 
-    void updateGroup(){
-        parentGroup.updateGroup();
+    void updateGroup(String statusString){
+        parentGroup.updateGroup(statusString);
     }
 
     void hide(){
