@@ -73,31 +73,45 @@ public class Lamp {
     }
 
     public void on(){
+//        Log.d("URL Sent", url  + "?cmd=" + subUrl + "_aan");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=" + subUrl + "_aan",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         isOn = true;
-                        updateGroup(response);
+                        if(parentGroup != null) {
+                            updateGroup(response);
+                        }else{
+                            setView();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {}
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
         });
         queue.add(stringRequest);
     }
 
     public void off(){
+//        Log.d("URL Sent", url  + "?cmd=" + subUrl + "_uit");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=" + subUrl + "_uit",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         isOn = false;
-                        updateGroup(response);
+                        if(parentGroup != null) {
+                            updateGroup(response);
+                        }else{
+                            setView();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {}
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
         });
         queue.add(stringRequest);
     }

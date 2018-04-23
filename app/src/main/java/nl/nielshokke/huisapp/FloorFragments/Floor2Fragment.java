@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,11 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import nl.nielshokke.huisapp.Items.Fan;
+import nl.nielshokke.huisapp.Items.Lamp;
+import nl.nielshokke.huisapp.Items.LampColor;
+import nl.nielshokke.huisapp.Items.LampGroup;
+import nl.nielshokke.huisapp.Items.LampRice;
 import nl.nielshokke.huisapp.QRcode.QRgenerator;
 import nl.nielshokke.huisapp.R;
 
@@ -25,6 +31,10 @@ import nl.nielshokke.huisapp.R;
 
 public class Floor2Fragment extends Fragment {
     private static final String TAG = "Floor 2 Fragment";
+
+    private LampGroup lamp_Rice_Group;
+    private Lamp lamp_Amber;
+    // private Lamp lamp_RColor;
 
     private RequestQueue queue;
 
@@ -58,12 +68,21 @@ public class Floor2Fragment extends Fragment {
         ImageView floor_IV = rootView.findViewById(R.id.floorView);
         floor_IV.setImageResource(R.drawable.floor2);
         setItemsFloor(rootView);
+//        Log.d("FloorLoader", "Floor 2 is loaded");
     }
 
-    private void setItemsFloor(RelativeLayout rootView){
+    private void setItemsFloor(RelativeLayout rootView) {
+        //lamp_Rice_Group = new LampGroup(getActivity(), rootView, queue, "all", R.drawable.lamp_groot_on, R.drawable.lamp_groot_off, false, true, true, 0, -500);
+
+        lamp_Amber = new LampRice(getActivity(), null, rootView, queue, "amber", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, false, 400, -440);
+
+        //lamp_RColor = new LampColor(getActivity(), lamp_Rice_Group, rootView, queue, "niks", R.drawable.lamp_color_on, R.drawable.lamp_klein_off, true, false, 0,-650);
+
+        //lamp_Rice_Group.addLamp(lamp_Amber);
+
+        //lamp_Rice_Group.updateGroup(null);
 
     }
-
     private void setFloorTitle(View rootView){
         TextView HW_TV = rootView.findViewById(R.id.HW_TV);
         HW_TV.setText("Floor 2");
