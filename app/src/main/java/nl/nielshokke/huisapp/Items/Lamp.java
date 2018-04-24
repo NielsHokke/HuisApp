@@ -151,11 +151,13 @@ public class Lamp {
         setView();
     }
 
-    void displayOn(String name){
+    boolean displayOn(String name){
         if(name.equals("") || name.equals(subUrl)){
             isOn = true;
             setView();
+            return true;
         }
+        return false;
     }
 
     void displayOff(String name){
@@ -178,4 +180,5 @@ public class Lamp {
             Lamp_IV.setVisibility(View.VISIBLE);
         }
     }
+
 }

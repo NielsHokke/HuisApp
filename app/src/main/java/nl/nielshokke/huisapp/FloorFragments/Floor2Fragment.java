@@ -33,7 +33,7 @@ public class Floor2Fragment extends Fragment {
     private static final String TAG = "Floor 2 Fragment";
 
     private LampGroup lamp_Rice_Group;
-    private Lamp lamp_Amber;
+    private LampRice lamp_Amber;
     // private Lamp lamp_RColor;
 
     private RequestQueue queue;
@@ -72,14 +72,14 @@ public class Floor2Fragment extends Fragment {
     }
 
     private void setItemsFloor(RelativeLayout rootView) {
-        //lamp_Rice_Group = new LampGroup(getActivity(), rootView, queue, "all", R.drawable.lamp_groot_on, R.drawable.lamp_groot_off, false, true, true, 0, -500);
+        //lamp_Rice_Group = new LampGroup(getActivity(), rootView, queue, "all", R.drawable.lamp_groot_on, R.drawable.lamp_groot_off, false, true, false, 0, -500);
 
-        lamp_Amber = new LampRice(getActivity(), null, rootView, queue, "amber", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, false, 400, -440);
+        lamp_Amber = new LampRice(getActivity(), null, rootView, queue, "Amber", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, false, 400, -440);
 
         //lamp_RColor = new LampColor(getActivity(), lamp_Rice_Group, rootView, queue, "niks", R.drawable.lamp_color_on, R.drawable.lamp_klein_off, true, false, 0,-650);
 
         //lamp_Rice_Group.addLamp(lamp_Amber);
-
+        lamp_Amber.updateLamp(null);
         //lamp_Rice_Group.updateGroup(null);
 
     }

@@ -32,11 +32,18 @@ public class LampGroup extends Lamp {
 
     List<Lamp> LampList;
     boolean isInGroupMode;
+    private boolean isHidden;
 
     public LampGroup(final Context context, RelativeLayout rootView, RequestQueue q, String urlName, int srcOn, int srcOff, boolean on, boolean hidden, boolean groupMode, int default_x, int default_y){
         super(context, null, rootView, q, urlName, srcOn, srcOff, on, hidden, default_x, default_y);
         LampList = new ArrayList<>();
         isInGroupMode = groupMode;
+        if(isHidden){
+            hide();
+        }else{
+            unhide();
+        }
+
         Lamp_IV.setOnLongClickListener(new View.OnLongClickListener(){
 
             @Override
