@@ -22,6 +22,7 @@ import nl.nielshokke.huisapp.Items.Lamp;
 import nl.nielshokke.huisapp.Items.LampColor;
 import nl.nielshokke.huisapp.Items.LampGroup;
 import nl.nielshokke.huisapp.Items.LampRice;
+import nl.nielshokke.huisapp.Items.ProMax;
 import nl.nielshokke.huisapp.QRcode.QRgenerator;
 import nl.nielshokke.huisapp.R;
 
@@ -35,6 +36,8 @@ public class Floor2Fragment extends Fragment {
     private LampGroup lamp_Rice_Group;
     private LampRice lamp_Amber;
     // private Lamp lamp_RColor;
+    private ProMax pm_Amplifier;
+    private ProMax lamp_DeskPM;
 
     private RequestQueue queue;
 
@@ -74,13 +77,16 @@ public class Floor2Fragment extends Fragment {
     private void setItemsFloor(RelativeLayout rootView) {
         //lamp_Rice_Group = new LampGroup(getActivity(), rootView, queue, "all", R.drawable.lamp_groot_on, R.drawable.lamp_groot_off, false, true, false, 0, -500);
 
-        lamp_Amber = new LampRice(getActivity(), null, rootView, queue, "Amber", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, false, 400, -440);
+        lamp_Amber = new LampRice(getActivity(), null, rootView, queue, "Amber", R.drawable.lamp_klein_on_amber, R.drawable.lamp_klein_off, false, false, 400, -440);
 
         //lamp_RColor = new LampColor(getActivity(), lamp_Rice_Group, rootView, queue, "niks", R.drawable.lamp_color_on, R.drawable.lamp_klein_off, true, false, 0,-650);
 
         //lamp_Rice_Group.addLamp(lamp_Amber);
         lamp_Amber.updateLamp(null);
         //lamp_Rice_Group.updateGroup(null);
+
+        pm_Amplifier = new ProMax(getActivity(), rootView, queue, "012705ED90", "01249BA5D0", R.drawable.speaker_on, R.drawable.speaker_off, false, false, -35, -615);
+        lamp_DeskPM = new ProMax(getActivity(), rootView, queue, "01E5EAFB90", "01E65A94D0", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, false, -400, -520);
 
     }
     private void setFloorTitle(View rootView){
