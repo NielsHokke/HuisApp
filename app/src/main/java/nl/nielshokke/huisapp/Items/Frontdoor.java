@@ -1,13 +1,20 @@
 package nl.nielshokke.huisapp.Items;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +33,13 @@ import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import nl.nielshokke.huisapp.Notification.FrontdoorNotification;
+import nl.nielshokke.huisapp.QRcode.QRgenerator;
 import nl.nielshokke.huisapp.R;
 import nl.nielshokke.huisapp.Dialogs.AddCardDialogFragment;
 import nl.nielshokke.huisapp.Dialogs.FrontDoorDialogFragment;
@@ -48,6 +61,10 @@ public class Frontdoor {
     private boolean isOnline;
     private boolean isInDevMode;
     private Activity mactivity;
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
+    private String TAG = "Frontdoor";
 
     public Frontdoor(final Activity activity, RelativeLayout rootView, RequestQueue q){
         DOOR_IV  = new ImageView(activity);
@@ -108,36 +125,39 @@ public class Frontdoor {
             @Override
             public void onClick(View view) {
 
-
-                final Handler handler = new Handler();
-                final int[] counter = {0};
-
-                Runnable r = new Runnable() {
-                    public void run() {
-//                        Log.d("Frontdoor", "generate QR-code");
-//                        counter[0]++;
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=test_" + counter[0]++,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        Log.d("Test", "response: " + counter[0]);
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {}
-                        });
-                        queue.add(stringRequest);
-
-
-                        if (counter[0] < 10){
-                            handler.postDelayed(this, 100);
-                        }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(mactivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                        ActivityCompat.requestPermissions(mactivity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                        return;
                     }
-                };
+                }
 
-                handler.postDelayed(r, 0);
+                Calendar dateTime = Calendar.getInstance();
+                dateTime.add(Calendar.HOUR, 3);
+                SimpleDateFormat format1 = new SimpleDateFormat("hh:mm");
+                String time = format1.format(dateTime.getTime());
+                String name = "Jetse Brouwer";
 
+                String data = QRgenerator.generateKey(mactivity,
+                        "this is a key off exactly 256 bi",
+                        name);
 
+                Bitmap QR_code = QRgenerator.generateQR(data);
+
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                QR_code.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                String path = MediaStore.Images.Media.insertImage(mactivity.getContentResolver(), QR_code, "QR_code", null);
+                Uri imageUri = Uri.parse(path);
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                String message = "Hi "+ name + ",\nThis QR-Code will grant you access to the DroomKeuken from now till " + time + ".\nHold the QR-Code in front of the camera. The camera can be found behind the glass in the top right corner of the frontdoor.";
+                sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+                sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                sendIntent.setType("image/jpeg");
+                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                sendIntent.setPackage("com.whatsapp");
+                mactivity.startActivity(sendIntent);
             }
         });
         rootView.addView(GENERATE_QR_CODE, 2);
