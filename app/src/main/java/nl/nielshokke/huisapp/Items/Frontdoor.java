@@ -132,10 +132,14 @@ public class Frontdoor {
                     }
                 }
 
+                //TODO if no key scan for key
+
                 Calendar dateTime = Calendar.getInstance();
                 dateTime.add(Calendar.HOUR, 3);
                 SimpleDateFormat format1 = new SimpleDateFormat("hh:mm");
                 String time = format1.format(dateTime.getTime());
+
+                //TODO create dialog for name input (time input?)
                 String name = "Jetse Brouwer";
 
                 String data = QRgenerator.generateKey(mactivity,
