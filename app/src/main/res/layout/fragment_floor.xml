@@ -42,7 +42,7 @@
         android:layout_alignBottom="@+id/floorView"
         android:layout_alignStart="@+id/HW_TV"
         android:gravity="left"
-        android:text="Temp:\t\t0°C\nHumid:\t0%"
+        android:text=""
         android:textSize="20sp"
         android:textStyle="bold" />
 
