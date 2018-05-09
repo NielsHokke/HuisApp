@@ -86,6 +86,7 @@ public class Floor1Fragment  extends Fragment {
         FRONT_DOOR = new Frontdoor(getActivity(), rootView, queue);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         FRONT_DOOR.setDevMode(sharedPref.getBoolean("dev_options", false));
+        // Add temperature/humidity to this floor
     }
 
     private void setFloorTitle(View rootView){
