@@ -14,8 +14,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import nl.nielshokke.huisapp.Items.Fan;
 import nl.nielshokke.huisapp.Items.Lamp;
@@ -58,11 +69,19 @@ public class Floor2Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_floor, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_floor, container, false);
 
         loadFloor((RelativeLayout) rootView);
         setFloorTitle(rootView);
 
+        setTempHumid(rootView);
+        Timer timer = new Timer();
+        TimerTask refresher = new TimerTask() {
+            public void run() {
+                setTempHumid(rootView);
+            }
+        };
+        timer.scheduleAtFixedRate(refresher, 0,5000);
 
         return rootView;
     }
@@ -93,6 +112,43 @@ public class Floor2Fragment extends Fragment {
         TextView HW_TV = rootView.findViewById(R.id.HW_TV);
         HW_TV.setText("Floor 2");
     }
+
+    private void setTempHumid(View rootView){
+        final TextView TX_TH = rootView.findViewById(R.id.TX_TH);
+//        Log.d("TempHumid", "TempHumid status request: http://192.168.178.200/cgi-bin/tempHumid.py");
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.200/cgi-bin/tempHumid.py",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jObject = new JSONObject(response);
+//                            Log.d("TempHumid", "TempHumid json: " + jObject);
+                            float Temp = Float.valueOf(jObject.getString("Temperature"));
+                            float Humid = Float.valueOf(jObject.getString("Humidity"));
+                            String TempS = String.format(Locale.ENGLISH, "%.01f", Float.valueOf(jObject.getString("Temperature")));
+                            String HumidS = String.format(Locale.ENGLISH, "%.0f", Float.valueOf(jObject.getString("Humidity")));
+                            TX_TH.setText("Temp:\t\t"+ TempS + "°C\nHumid:\t" + HumidS + "%");
+//                            Log.d("TempHumid", "Received temp: " + TempS + ", humid: " + HumidS);
+                        } catch (JSONException e) {
+//                            Log.d("TempHumid", "Response is not json?");
+                            TX_TH.setText("");
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                Log.d("TempHumid", "We've got not or error response");
+                error.printStackTrace();
+                TX_TH.setText("");
+            }
+        });
+        queue.add(stringRequest);
+//        Log.d("TempHumid", "StringRequest: "+stringRequest);
+
+    }
+
 
 }
 

@@ -71,6 +71,7 @@ public class LampRice extends Lamp {
                 }
             });
             queue.add(stringRequest);
+//            Log.d("LampRice", "StringRequest: " + stringRequest);
         }else{
             setLamp(statusString);
         }

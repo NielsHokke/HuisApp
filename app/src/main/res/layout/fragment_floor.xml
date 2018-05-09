@@ -34,6 +34,17 @@
         android:src="@drawable/floor2" />
     <!--android:src="@drawable/floor1"-->
 
+    <TextView
+        android:id="@+id/TX_TH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="50dp"
+        android:layout_alignBottom="@+id/floorView"
+        android:layout_alignStart="@+id/HW_TV"
+        android:gravity="left"
+        android:text="Temp:\t\t0°C\nHumid:\t0%"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 
 
