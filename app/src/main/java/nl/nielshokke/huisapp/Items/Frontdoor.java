@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import nl.nielshokke.huisapp.Dialogs.GenerateQrDialogFragment;
 import nl.nielshokke.huisapp.Notification.FrontdoorNotification;
 import nl.nielshokke.huisapp.QRcode.QRgenerator;
 import nl.nielshokke.huisapp.R;
@@ -132,36 +133,8 @@ public class Frontdoor {
                     }
                 }
 
-                //TODO if no key scan for key
+                showGenerateQrDialog();
 
-                Calendar dateTime = Calendar.getInstance();
-                dateTime.add(Calendar.HOUR, 3);
-                SimpleDateFormat format1 = new SimpleDateFormat("hh:mm");
-                String time = format1.format(dateTime.getTime());
-
-                //TODO create dialog for name input (time input?)
-                String name = "Jetse Brouwer";
-
-                String data = QRgenerator.generateKey(mactivity,
-                        "this is a key off exactly 256 bi",
-                        name);
-
-                Bitmap QR_code = QRgenerator.generateQR(data);
-
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                QR_code.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(mactivity.getContentResolver(), QR_code, "QR_code", null);
-                Uri imageUri = Uri.parse(path);
-
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                String message = "Hi "+ name + ",\nThis QR-Code will grant you access to the DroomKeuken from now till " + time + ".\nHold the QR-Code in front of the camera. The camera can be found behind the glass in the top right corner of the frontdoor.";
-                sendIntent.putExtra(Intent.EXTRA_TEXT, message);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                sendIntent.setType("image/jpeg");
-                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                sendIntent.setPackage("com.whatsapp");
-                mactivity.startActivity(sendIntent);
             }
         });
         rootView.addView(GENERATE_QR_CODE, 2);
@@ -255,6 +228,11 @@ public class Frontdoor {
 
     private void showAddCardDialog(){
         AddCardDialogFragment newFragment = AddCardDialogFragment.newInstance();
+        newFragment.show(mactivity.getFragmentManager(), "dialog");
+    }
+
+    private  void showGenerateQrDialog(){
+        GenerateQrDialogFragment newFragment = GenerateQrDialogFragment.newInstance();
         newFragment.show(mactivity.getFragmentManager(), "dialog");
     }
 }

@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -28,10 +29,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class QRgenerator {
 
+    private static String TAG = "generateQR";
+
 // encrypted [ (ID of generator) (time of creation) (time of termination) (name of reciever)
     public static Bitmap generateQR(String data){
 
-        Log.d("generateQR", "Generating Qr-code for: " + data);
+        Log.d(TAG, "Generating Qr-code for: " + data);
 
         QRCodeWriter writer = new QRCodeWriter();
         Bitmap bmp = null;
@@ -52,10 +55,14 @@ public class QRgenerator {
         return bmp;
     }
 
-    public static String generateKey(Activity activity, String keyString, String name){
+    public static String generateCT(Activity activity, String key, String IV, String recipient, String time, String Comment){
         JSONObject json = new JSONObject();
         try {
-            json.put("name", name);
+            json.put("recipient", recipient);
+
+            json.put("valid_till", time);
+
+            json.put("comment", Comment);
 
             final String android_id = Settings.Secure.getString(activity.getContentResolver(),Settings.Secure.ANDROID_ID);
             json.put("made_by", android_id);
@@ -68,27 +75,27 @@ public class QRgenerator {
         }
 
         String data = json.toString();
-        Log.d("generate key", data);
+        Log.d(TAG, data);
 
-        byte[] key = keyString.getBytes();
-        Log.d("generate key", "key lenght: " + key.length);
-        byte[] ct = {};
+        return encrypt(key, IV, data);
+    }
+
+    private static String encrypt(String key, String initVector, String value) {
         try {
-            ct = encrypt(key, data.getBytes());
-        } catch (Exception e) {
-            e.printStackTrace();
+            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+
+            byte[] encrypted = cipher.doFinal(value.getBytes());
+
+            return Base64.encodeToString(encrypted,  Base64.NO_WRAP);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
-        return Base64.encodeToString(ct, Base64.NO_WRAP);
+        return null;
     }
-
-    private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-        byte[] encrypted = cipher.doFinal(clear);
-        return encrypted;
-    }
-
 }
 

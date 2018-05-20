@@ -30,7 +30,6 @@ import nl.nielshokke.huisapp.R;
 
 public class FanDialogFragment extends DialogFragment{
 
-
     private String TAG = "FanDialogFragment";
     private RequestQueue queue;
 
