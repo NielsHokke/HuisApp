@@ -144,7 +144,9 @@ public class FanDialogFragment extends DialogFragment{
 
             final int toggleID = Resources.getSystem().getIdentifier("toggle_mode", "id", "android");
             final View toggleBt = TP.findViewById(toggleID);
-            toggleBt.setVisibility(View.GONE);
+            if(toggleBt != null) {
+                toggleBt.setVisibility(View.GONE);
+            }
         }
     }
 }

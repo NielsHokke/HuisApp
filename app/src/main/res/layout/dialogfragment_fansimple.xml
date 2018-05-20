@@ -27,20 +27,25 @@
 
     </LinearLayout>
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/cbPicView"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/fan_dialog_big"
         android:layout_below="@+id/ld_color_area"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:headerBackground="@color/transparant" />
+        />
 
     <RadioGroup
         android:id="@+id/fanRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/timePicker"
+        android:layout_below="@+id/cbPicView"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/activity_vertical_margin">
@@ -51,28 +56,28 @@
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Low"
-            android:tag="low"/>
+            android:tag="1"/>
 
         <RadioButton
             android:id="@+id/radioButtonM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Medium"
-            android:tag="medium"/>
+            android:tag="2"/>
 
         <RadioButton
             android:id="@+id/radioButtonH"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="High"
-            android:tag="high" />
+            android:tag="3" />
 
         <RadioButton
             android:id="@+id/radioButtonO"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Off"
-            android:tag="off" />
+            android:tag="0" />
     </RadioGroup>
 
 </RelativeLayout>

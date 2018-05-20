@@ -13,15 +13,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import nl.nielshokke.huisapp.Dialogs.FanDialogFragment;
+import nl.nielshokke.huisapp.Dialogs.FanSimpleDialogFragment;
 import nl.nielshokke.huisapp.R;
 
 /**
  * Created by Nelis on 19-4-2018.
  */
 
-public class Fan {
+public class FanSimple {
 
-    private static final String TAG = "Fan";
+    private static final String TAG = "FanSimple";
 
     private boolean isOn;
     private boolean isHidden;
@@ -33,13 +34,13 @@ public class Fan {
 
 
 
-    String url ="http://192.168.178.202/cgi-bin/GrootLightBridge.py";
+    String url ="http://192.168.178.198/set/";
     String subUrl;
     RequestQueue queue;
     Activity myActivity;
 
 
-    public Fan(final Activity activity, RelativeLayout rootView, RequestQueue q,  String urlName, int srcOn, int srcOff, boolean on, boolean hidden, int default_x, int default_y){
+    public FanSimple(final Activity activity, RelativeLayout rootView, RequestQueue q,  String urlName, int srcOn, int srcOff, boolean on, boolean hidden, int default_x, int default_y){
         Fan_IV = new ImageView(activity);
         isHidden = hidden;
         isOn = on;
@@ -70,7 +71,7 @@ public class Fan {
     }
 
     private void checkIfOnline(){
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=test",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.198/",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -111,7 +112,7 @@ public class Fan {
     }
 
     private void showFanDialog(){
-        FanDialogFragment newFragment = FanDialogFragment.newInstance(subUrl);
+        FanSimpleDialogFragment newFragment = FanSimpleDialogFragment.newInstance(subUrl);
         newFragment.show(myActivity.getFragmentManager(), "dialog");
     }
 

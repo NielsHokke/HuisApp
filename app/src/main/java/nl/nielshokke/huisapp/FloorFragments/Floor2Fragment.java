@@ -29,7 +29,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.nielshokke.huisapp.Items.Fan;
+import nl.nielshokke.huisapp.Items.FanSimple;
 import nl.nielshokke.huisapp.Items.Lamp;
+import nl.nielshokke.huisapp.Items.LampAWCColor;
 import nl.nielshokke.huisapp.Items.LampColor;
 import nl.nielshokke.huisapp.Items.LampGroup;
 import nl.nielshokke.huisapp.Items.LampRice;
@@ -46,9 +48,11 @@ public class Floor2Fragment extends Fragment {
 
     private LampGroup lamp_Rice_Group;
     private LampRice lamp_Amber;
+    private LampAWCColor lamp_AWCCo;
     // private Lamp lamp_RColor;
     private ProMax pm_Amplifier;
     private ProMax lamp_DeskPM;
+    private FanSimple fan;
 
     private RequestQueue queue;
 
@@ -104,8 +108,12 @@ public class Floor2Fragment extends Fragment {
         lamp_Amber.updateLamp(null);
         //lamp_Rice_Group.updateGroup(null);
 
+        lamp_AWCCo = new LampAWCColor(getActivity(), null, rootView, queue, "niks", R.drawable.lamp_color_on, R.drawable.lamp_klein_off, false, false, 400,-570);
+
         pm_Amplifier = new ProMax(getActivity(), rootView, queue, "012705ED90", "01249BA5D0", R.drawable.speaker_on, R.drawable.speaker_off, false, false, -35, -615);
         lamp_DeskPM = new ProMax(getActivity(), rootView, queue, "01E5EAFB90", "01E65A94D0", R.drawable.lamp_klein_on, R.drawable.lamp_klein_off, false, false, -400, -520);
+
+        fan = new FanSimple(getActivity(), rootView, queue, "set", R.drawable.fan_on, R.drawable.fan_off, false, false, 200, -320);
 
     }
     private void setFloorTitle(View rootView){
