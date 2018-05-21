@@ -137,7 +137,7 @@ public class FrontdoorNotification {
 
 
             // Configure the notification channel.
-            notificationChannel.setDescription("Channel description 1");
+            notificationChannel.setDescription("Doorbell notifications");
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(R.color.purple);
             notificationChannel.enableVibration(false);
