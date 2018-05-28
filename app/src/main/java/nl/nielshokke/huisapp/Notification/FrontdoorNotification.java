@@ -180,14 +180,14 @@ public class FrontdoorNotification {
 
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }else{
-            NotificationCompat.Builder builder = new android.support.v7.app.NotificationCompat.Builder(mContext)
-                    .setStyle(new android.support.v7.app.NotificationCompat.DecoratedCustomViewStyle())
+            NotificationCompat.Builder builder = new android.support.v4.app.NotificationCompat.Builder(mContext)
+                    .setStyle(new android.support.v4.app.NotificationCompat.DecoratedCustomViewStyle())
                     .setColor(mContext.getResources().getColor(R.color.colorPrimary))
                     .setCustomBigContentView(bigremoteViews)
                     .setContentText("someone's at the door")
                     .setSmallIcon(R.drawable.ic_door_icon)
                     .setAutoCancel(true)
-                    .setPriority(android.support.v7.app.NotificationCompat.PRIORITY_MAX)
+                    .setPriority(android.support.v4.app.NotificationCompat.PRIORITY_MAX)
                     .setContentIntent(resultPendingIntent);
 
             if(istest){
