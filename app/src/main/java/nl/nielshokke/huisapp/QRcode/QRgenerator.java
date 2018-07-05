@@ -1,8 +1,10 @@
 package nl.nielshokke.huisapp.QRcode;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
@@ -30,6 +32,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class QRgenerator {
 
     private static String TAG = "generateQR";
+    private static final String USERNAME = "pref_Username";
 
 // encrypted [ (ID of generator) (time of creation) (time of termination) (name of reciever)
     public static Bitmap generateQR(String data){
@@ -64,8 +67,12 @@ public class QRgenerator {
 
             json.put("comment", Comment);
 
-            final String android_id = Settings.Secure.getString(activity.getContentResolver(),Settings.Secure.ANDROID_ID);
-            json.put("made_by", android_id);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+            String username = sharedPref.getString(USERNAME, "");
+            if(username.equals("")){
+                throw new IllegalArgumentException("No USERNAME defined in shared prefs");
+            }
+            json.put("made_by", username);
 
             Date currentTime = Calendar.getInstance().getTime();
             json.put("made_on", currentTime.toString());

@@ -40,7 +40,13 @@ public class GenerateQrDialogFragment  extends DialogFragment{
 
     private TimePicker TP;
 
-    public static GenerateQrDialogFragment newInstance() {
+    private static String KEY_IV;
+
+    public static GenerateQrDialogFragment newInstance(String key_IV) {
+        if(key_IV.length() < 32){
+            throw new IllegalArgumentException("QR_Code key < 32");
+        }
+        KEY_IV = key_IV;
         return new GenerateQrDialogFragment();
     }
 
@@ -63,7 +69,7 @@ public class GenerateQrDialogFragment  extends DialogFragment{
         final AlertDialog dialog = (AlertDialog) getDialog();
         if (dialog != null) {
 
-            final EditText recipientET = dialog.findViewById(R.id.RecipientET);
+            final EditText recipientET = dialog.findViewById(R.id.KeyET);
             final EditText commentET = dialog.findViewById(R.id.commentET);
 
             final Button generateButton = dialog.findViewById(R.id.generateBT);
@@ -85,14 +91,11 @@ public class GenerateQrDialogFragment  extends DialogFragment{
 
                     minutes += hours * 60;
 
-                    //                //TODO if no key scan for key
-
                     Calendar dateTime = Calendar.getInstance();
                     dateTime.add(Calendar.MINUTE, minutes);
                     SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     String time = format1.format(dateTime.getTime());
 
-                    //TODO create dialog for name input (time input?)
                     String recipient = recipientET.getText().toString();
                     String comment = commentET.getText().toString();
 
@@ -103,9 +106,9 @@ public class GenerateQrDialogFragment  extends DialogFragment{
                         return;
                     }
 
-                    //TODO change keys to outside source
-                    String key = "Bar12345Bar12345"; // 128 bit key
-                    String IV = "RandomInitVector"; // 16 bytes IV
+                    String key = KEY_IV.substring(0, 16); // 128 bit key
+                    String IV = KEY_IV.substring(16, 32);; // 16 bytes IV
+                    Log.d(TAG, "key: " + key + " IV: " + IV);
                     String cipherText = QRgenerator.generateCT(getActivity(),key, IV, recipient, time, comment);
 
                     Log.d(TAG, "cipherText: " + cipherText);

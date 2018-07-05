@@ -1,9 +1,13 @@
 package nl.nielshokke.huisapp;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,9 +18,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import nl.nielshokke.huisapp.Dialogs.GetUserInfoDialogFragment;
 import nl.nielshokke.huisapp.FloorFragments.Floor1Fragment;
 import nl.nielshokke.huisapp.FloorFragments.Floor2Fragment;
 import nl.nielshokke.huisapp.FloorFragments.Floor3Fragment;
@@ -25,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String OPEN_CAMERA_TAG = "frontdooroOpenCamera";
+    private static final String USERNAME = "pref_Username";
 
     private FragmentStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
@@ -47,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
         if(OPEN_CAMERA_TAG.equals(getIntent().getAction())){
             //mSectionsStatePagerAdapter.setOpenCamera();
+        }
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sharedPref.getString(USERNAME, "").equals("")){
+            GetUserInfoDialogFragment newFragment = GetUserInfoDialogFragment.newInstance("Welcome", "To continue and start using the huisapp please enter your name.");
+            newFragment.show(this.getFragmentManager(), "dialog");
         }
     }
 

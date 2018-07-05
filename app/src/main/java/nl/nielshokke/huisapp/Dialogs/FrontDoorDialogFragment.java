@@ -101,7 +101,7 @@ public class FrontDoorDialogFragment extends DialogFragment {
             //WebView webView = dialogRootView.findViewById(R.id.WebView);
             webView.clearCache(true);
             webView.loadUrl("http://192.168.178.200:8080/stream_simple.html");
-            webView.setInitialScale(getScale(800,0));
+            webView.setInitialScale(getScale(700,0));
             webView.setVerticalScrollBarEnabled(false);
             webView.setHorizontalScrollBarEnabled(false);
             webView.setOnTouchListener(new View.OnTouchListener() {
