@@ -17,6 +17,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -61,21 +63,22 @@ public class QRgenerator {
     public static String generateCT(Activity activity, String key, String IV, String recipient, String time, String Comment){
         JSONObject json = new JSONObject();
         try {
-            json.put("recipient", recipient);
+            json.put("R", recipient);
 
-            json.put("valid_till", time);
+            json.put("VT", time);
 
-            json.put("comment", Comment);
+            json.put("C", Comment);
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
             String username = sharedPref.getString(USERNAME, "");
             if(username.equals("")){
                 throw new IllegalArgumentException("No USERNAME defined in shared prefs");
             }
-            json.put("made_by", username);
+            json.put("MB", username);
 
-            Date currentTime = Calendar.getInstance().getTime();
-            json.put("made_on", currentTime.toString());
+            Date date = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            json.put("MO", dateFormat.format(date));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -83,6 +86,7 @@ public class QRgenerator {
 
         String data = json.toString();
         Log.d(TAG, data);
+        Log.d(TAG, "data size: " + data.length());
 
         return encrypt(key, IV, data);
     }

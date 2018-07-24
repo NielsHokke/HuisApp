@@ -69,7 +69,7 @@ public class GenerateQrDialogFragment  extends DialogFragment{
         final AlertDialog dialog = (AlertDialog) getDialog();
         if (dialog != null) {
 
-            final EditText recipientET = dialog.findViewById(R.id.KeyET);
+            final EditText recipientET = dialog.findViewById(R.id.RecipientET);
             final EditText commentET = dialog.findViewById(R.id.commentET);
 
             final Button generateButton = dialog.findViewById(R.id.generateBT);

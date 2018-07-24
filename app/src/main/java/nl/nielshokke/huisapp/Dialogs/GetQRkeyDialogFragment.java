@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.Volley;
-
 import nl.nielshokke.huisapp.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -48,7 +46,7 @@ public class GetQRkeyDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-        final EditText keyET = dialog.findViewById(R.id.KeyET);
+        final EditText keyET = dialog.findViewById(R.id.RecipientET);
 
         final AlertDialog dialog = (AlertDialog) getDialog();
         if (dialog != null) {
