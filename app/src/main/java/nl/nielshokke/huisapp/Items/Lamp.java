@@ -27,8 +27,8 @@ public class Lamp {
     private boolean isOn;
     private boolean isHidden;
     ImageView Lamp_IV;
-    private int sourceOn;
-    private int sourceOff;
+    int sourceOn;
+    int sourceOff;
 
     String url ="http://192.168.178.202/cgi-bin/GrootLightBridge.py";
     RequestQueue queue;
@@ -122,19 +122,6 @@ public class Lamp {
         }else{
             on();
         }
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=" + subUrl + "_toggle",
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        isOn = !isOn;
-//                        setView();
-//                        Log.d(TAG, "response: " +response);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {}
-//        });
-//        queue.add(stringRequest);
     }
 
     void updateGroup(String statusString){

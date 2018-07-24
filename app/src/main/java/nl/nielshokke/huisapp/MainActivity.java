@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import nl.nielshokke.huisapp.FloorFragments.Floor1Fragment;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FragmentStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
+
+    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,17 @@ public class MainActivity extends AppCompatActivity {
         if(OPEN_CAMERA_TAG.equals(getIntent().getAction())){
             //mSectionsStatePagerAdapter.setOpenCamera();
         }
+
+        queue = Volley.newRequestQueue(this);
+
+//        setTempHumid();
+//        Timer timer = new Timer();
+//        TimerTask refresher = new TimerTask() {
+//            public void run() {
+//                setTempHumid();
+//            }
+//        };
+//        timer.scheduleAtFixedRate(refresher, 0,15000);
     }
 
     @Override
@@ -83,6 +97,43 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+//    private void setTempHumid(){
+//        final TextView TX_TH = findViewById(R.id.TX_TH);
+////        Log.d("TempHumid", "TempHumid status request: http://192.168.178.200/cgi-bin/tempHumid.py");
+//
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.200/cgi-bin/tempHumid.py",
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.d("TempHumid", "response: " + response);
+//                        try {
+//                            JSONObject jObject = new JSONObject(response);
+////                            Log.d("TempHumid", "TempHumid json: " + jObject);
+//                            float Temp = Float.valueOf(jObject.getString("Temperature"));
+//                            float Humid = Float.valueOf(jObject.getString("Humidity"));
+//                            String TempS = String.format(Locale.ENGLISH, "%.01f", Float.valueOf(jObject.getString("Temperature")));
+//                            String HumidS = String.format(Locale.ENGLISH, "%.0f", Float.valueOf(jObject.getString("Humidity")));
+//                            TX_TH.setText("Temp:\t\t"+ TempS + "°C\nHumid:\t" + HumidS + "%");
+//                            Log.d("TempHumid", "Received temp: " + TempS + ", humid: " + HumidS);
+//                        } catch (JSONException e) {
+//                            Log.d("TempHumid", "Response is not json?");
+//                            TX_TH.setText("");
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d("TempHumid", "We've got not or error response");
+//                error.printStackTrace();
+//                TX_TH.setText("");
+//            }
+//        });
+//        queue.add(stringRequest);
+////        Log.d("TempHumid", "StringRequest: "+stringRequest);
+//
+//    }
+
     public class SectionsStatePagerAdapter extends FragmentStatePagerAdapter {
 
         private Boolean mOpenCamera = false;
@@ -96,16 +147,18 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if(position == 0){
-                Fragment FragmentFloor1 = Floor1Fragment.newInstance();
+                Fragment FragmentFloor1 = Floor1Fragment.newInstance(queue);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(OPEN_CAMERA_TAG, mOpenCamera);
                 mOpenCamera = false;
                 FragmentFloor1.setArguments(bundle);
                 return FragmentFloor1;
             }else if(position == 1){
-                return Floor2Fragment.newInstance();
+                //return null;
+                return Floor2Fragment.newInstance(queue);
             }else if(position == 2){
-                return Floor3Fragment.newInstance();
+                //return null;
+                return Floor3Fragment.newInstance(queue);
             }else{
                 return null;
             }

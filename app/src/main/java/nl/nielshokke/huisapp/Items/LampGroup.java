@@ -30,14 +30,20 @@ import nl.nielshokke.huisapp.R;
 
 public class LampGroup extends Lamp {
 
+    private static final String TAG = "LampGroup";
+
     List<Lamp> LampList;
     boolean isInGroupMode;
+    boolean isGroupOn;
     private boolean isHidden;
+
 
     public LampGroup(final Context context, RelativeLayout rootView, RequestQueue q, String urlName, int srcOn, int srcOff, boolean on, boolean hidden, boolean groupMode, int default_x, int default_y){
         super(context, null, rootView, q, urlName, srcOn, srcOff, on, hidden, default_x, default_y);
         LampList = new ArrayList<>();
         isInGroupMode = groupMode;
+        isGroupOn = on;
+
         if(isHidden){
             hide();
         }else{
@@ -60,6 +66,9 @@ public class LampGroup extends Lamp {
 
     @Override
     public void toggle(){
+
+        Log.d(TAG,"toggle isInGroupMode:" + isInGroupMode);
+
         if(isInGroupMode){
             if(isOn()){
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url  + "?cmd=" + subUrl + "_uit",
@@ -107,6 +116,27 @@ public class LampGroup extends Lamp {
                 lamp.unhide();
             }
             subUrl = "midden";
+
+        }
+        //updateGroup(null);
+        setView();
+    }
+
+    @Override
+    void setView(){
+
+        Log.d(TAG,"setView isON:" + isOn() + ", isGroupOn:" + isGroupOn + ", isInGroupMode:" + isInGroupMode);
+
+        if(isOn() || (isGroupOn && isInGroupMode)){
+            Lamp_IV.setImageResource(sourceOn);
+        }else{
+            Lamp_IV.setImageResource(sourceOff);
+        }
+
+        if(isHidden){
+            Lamp_IV.setVisibility(View.INVISIBLE);
+        }else{
+            Lamp_IV.setVisibility(View.VISIBLE);
         }
     }
 
@@ -114,12 +144,14 @@ public class LampGroup extends Lamp {
         try {
             JSONObject jObject = new JSONObject(statusString);
 
+            isGroupOn = false;
 
 
             if(Float.valueOf(jObject.getString("Rechts")) > 0){
                 for(Lamp lamp : LampList){
                     lamp.displayOn("rechts");
                 }
+                isGroupOn = true;
             }else{
                 for(Lamp lamp : LampList){
                     lamp.displayOff("rechts");
@@ -128,6 +160,7 @@ public class LampGroup extends Lamp {
 
             if(Float.valueOf(jObject.getString("Midden")) > 0){
                 setOn(true);
+                isGroupOn = true;
             }else{
                 setOn(false);
             }
@@ -136,6 +169,7 @@ public class LampGroup extends Lamp {
                 for(Lamp lamp : LampList){
                     lamp.displayOn("links_onder");
                 }
+                isGroupOn = true;
             }else{
                 for(Lamp lamp : LampList){
                     lamp.displayOff("links_onder");
@@ -146,6 +180,7 @@ public class LampGroup extends Lamp {
                 for(Lamp lamp : LampList){
                     lamp.displayOn("links_boven");
                 }
+                isGroupOn = true;
             }else{
                 for(Lamp lamp : LampList){
                     lamp.displayOff("links_boven");

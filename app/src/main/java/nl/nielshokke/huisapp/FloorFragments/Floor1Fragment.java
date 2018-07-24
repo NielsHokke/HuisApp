@@ -43,21 +43,23 @@ public class Floor1Fragment  extends Fragment {
 
     private boolean mLONG_CLICK = false;
 
-    private RequestQueue queue;
+    private static RequestQueue queue;
     private Frontdoor FRONT_DOOR;
+
 
     public Floor1Fragment() {
         // Required empty public constructor
     }
 
-    public static Floor1Fragment newInstance() {
+    public static Floor1Fragment newInstance(RequestQueue q) {
+        queue = q;
         return new Floor1Fragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        queue = Volley.newRequestQueue(getActivity());
+        //queue = Volley.newRequestQueue(getActivity());
     }
 
     @Override
@@ -74,15 +76,6 @@ public class Floor1Fragment  extends Fragment {
 
         loadFloor((RelativeLayout) rootView);
         setFloorTitle(rootView);
-
-        setTempHumid(rootView);
-        Timer timer = new Timer();
-        TimerTask refresher = new TimerTask() {
-            public void run() {
-                setTempHumid(rootView);
-            }
-        };
-        timer.scheduleAtFixedRate(refresher, 0,5000);
 
         if(getArguments().getBoolean(OPEN_CAMERA_TAG, false)){
             FRONT_DOOR.showFrontDoorDialog();
@@ -113,39 +106,5 @@ public class Floor1Fragment  extends Fragment {
         HW_TV.setText("Floor 1");
     }
 
-    private void setTempHumid(View rootView){
-        final TextView TX_TH = rootView.findViewById(R.id.TX_TH);
-//        Log.d("TempHumid", "TempHumid status request: http://192.168.178.200/cgi-bin/tempHumid.py");
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.200/cgi-bin/tempHumid.py",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jObject = new JSONObject(response);
-//                            Log.d("TempHumid", "TempHumid json: " + jObject);
-                            float Temp = Float.valueOf(jObject.getString("Temperature"));
-                            float Humid = Float.valueOf(jObject.getString("Humidity"));
-                            String TempS = String.format(Locale.ENGLISH, "%.01f", Float.valueOf(jObject.getString("Temperature")));
-                            String HumidS = String.format(Locale.ENGLISH, "%.0f", Float.valueOf(jObject.getString("Humidity")));
-                            TX_TH.setText("Temp:\t\t"+ TempS + "°C\nHumid:\t" + HumidS + "%");
-//                            Log.d("TempHumid", "Received temp: " + TempS + ", humid: " + HumidS);
-                        } catch (JSONException e) {
-//                            Log.d("TempHumid", "Response is not json?");
-                            TX_TH.setText("");
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-//                Log.d("TempHumid", "We've got not or error response");
-                error.printStackTrace();
-                TX_TH.setText("");
-            }
-        });
-        queue.add(stringRequest);
-//        Log.d("TempHumid", "StringRequest: "+stringRequest);
-
-    }
 }

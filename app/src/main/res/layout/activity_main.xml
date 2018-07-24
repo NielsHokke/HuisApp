@@ -41,4 +41,16 @@
         <!--android:layout_margin="@dimen/fab_margin"-->
         <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
 
+    <TextView
+        android:id="@+id/TX_TH"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:gravity="start"
+        android:paddingBottom="50dp"
+        android:paddingStart="50dp"
+        android:text=""
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
 </android.support.design.widget.CoordinatorLayout>
