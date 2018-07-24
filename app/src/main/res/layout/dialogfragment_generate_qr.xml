@@ -27,22 +27,96 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/et_date"
+    <TextView
+        android:id="@+id/TV1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ld_color_area"
         android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:inputType="date" />
+        android:layout_marginTop="20dp"
+        android:text="Valid for"
+        android:textColor="@color/gray"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/et_time"
+    <TimePicker
+        android:id="@+id/timePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/et_date"
+        android:layout_below="@+id/TV1"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="-20dp"
+        android:gravity="center"
+        android:headerBackground="@color/transparant" />
+
+
+    <TextView
+        android:id="@+id/TV2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/RecipientET"
+        android:layout_alignBottom="@+id/RecipientET"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="22dp"
+        android:text="Recipient"
+        android:textColor="@color/gray"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/RecipientET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timePicker"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/TV3"
+        android:maxLength="15"
         android:ems="10"
-        android:inputType="time" />
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:textColor="@color/gray"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/TV3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/commentET"
+        android:layout_alignBottom="@+id/commentET"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="22dp"
+        android:text="Comment"
+        android:textColor="@color/gray"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/commentET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/RecipientET"
+        android:layout_below="@+id/RecipientET"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
+        android:maxLength="40"
+        android:ems="10"
+        android:inputType="textCapSentences"
+        android:textColor="@color/gray"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/generateBT"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/commentET"
+        android:layout_marginTop="20dp"
+        android:text="Generate and share" />
 
 </RelativeLayout>

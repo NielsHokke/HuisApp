@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.Calendar;
 
 import nl.nielshokke.huisapp.Notification.FrontdoorNotification;
+import nl.nielshokke.huisapp.Notification.QRcodeNotification;
 import nl.nielshokke.huisapp.R;
 
 /**
@@ -54,9 +55,10 @@ public class MessagingService extends FirebaseMessagingService {
             String time = "";
             Boolean test = false;
 
-            try {
-                bm = getBitmapFromURL(mainObject.getString("image_url"));
-                time = mainObject.getString("time");
+            String type = "Default";
+
+            try{
+                type = time = mainObject.getString("type");
                 test = mainObject.getBoolean("test");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -64,14 +66,52 @@ public class MessagingService extends FirebaseMessagingService {
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-            if(test){
-                if(sharedPref.getBoolean("dev_options", false)){
+            if(type.equals("Doorbell")){
+                try {
+                    bm = getBitmapFromURL(mainObject.getString("image_url"));
+                    time = mainObject.getString("time");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                if(test){
+                    if(sharedPref.getBoolean("dev_options", false)){
+                        FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
+                        notification.show(bm,time, test, false);
+                    }
+                }else{
                     FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
                     notification.show(bm,time, test, false);
                 }
-            }else{
-                FrontdoorNotification notification = new FrontdoorNotification(getBaseContext());
-                notification.show(bm,time, test, false);
+            }else if(type.equals("QRcode")){
+                //TODO build QRcode notification
+
+                String recipient = "RECIPIENT";
+                String made_by = "MADE_BY";
+                String comment = "COMMENT";
+
+
+                try {
+                    recipient = mainObject.getString("recipient");
+                    made_by = mainObject.getString("made_by");
+                    comment = mainObject.getString("comment");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(test){
+                    if(sharedPref.getBoolean("dev_options", false)){
+                        QRcodeNotification notification = new QRcodeNotification(getBaseContext());
+                        notification.show(recipient, made_by, comment, test);
+                    }
+                }else{
+                    QRcodeNotification notification = new QRcodeNotification(getBaseContext());
+                    notification.show(recipient, made_by, comment, test);
+                }
             }
         }
 

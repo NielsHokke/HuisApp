@@ -1,37 +1,32 @@
 package nl.nielshokke.huisapp.Items;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Handler;
-import android.support.v7.app.NotificationCompat;
+import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.OnColorSelectedListener;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
+import nl.nielshokke.huisapp.Dialogs.GenerateQrDialogFragment;
+import nl.nielshokke.huisapp.Dialogs.GetQRkeyDialogFragment;
+import nl.nielshokke.huisapp.Dialogs.GetUserInfoDialogFragment;
 import nl.nielshokke.huisapp.Notification.FrontdoorNotification;
 import nl.nielshokke.huisapp.R;
 import nl.nielshokke.huisapp.Dialogs.AddCardDialogFragment;
 import nl.nielshokke.huisapp.Dialogs.FrontDoorDialogFragment;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Nelis on 21-10-2017.
@@ -42,18 +37,25 @@ public class Frontdoor {
     private ImageView DOOR_IV;
     private ImageView ADD_CARD_IV;
     private ImageView TEST_NOTIFICATION_IV;
-    private ImageView GENERATE_QR_CODE;
+    private ImageView GENERATE_QR_CODE_IV;
 
     private RequestQueue queue;
     private boolean isOnline;
     private boolean isInDevMode;
     private Activity mactivity;
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private static final String USERNAME = "pref_Username";
+
+    private static final String QR_KEY = "QR_CODE_KEY";
+
+    private String TAG = "Frontdoor";
+
     public Frontdoor(final Activity activity, RelativeLayout rootView, RequestQueue q){
         DOOR_IV  = new ImageView(activity);
         ADD_CARD_IV  = new ImageView(activity);
         TEST_NOTIFICATION_IV = new ImageView(activity);
-        GENERATE_QR_CODE = new ImageView(activity);
+        GENERATE_QR_CODE_IV = new ImageView(activity);
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, R.id.floorView);
@@ -99,48 +101,33 @@ public class Frontdoor {
         rootView.addView(TEST_NOTIFICATION_IV, 2);
 
 
-        GENERATE_QR_CODE.setImageResource(R.drawable.generate_qr_on);
-        GENERATE_QR_CODE.setLayoutParams(layoutParams);
-        GENERATE_QR_CODE.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        GENERATE_QR_CODE.setX(-150);
-        GENERATE_QR_CODE.setY(-250);
-        GENERATE_QR_CODE.setOnClickListener(new View.OnClickListener() {
+        GENERATE_QR_CODE_IV.setImageResource(R.drawable.generate_qr_on);
+        GENERATE_QR_CODE_IV.setLayoutParams(layoutParams);
+        GENERATE_QR_CODE_IV.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        GENERATE_QR_CODE_IV.setX(-150);
+        GENERATE_QR_CODE_IV.setY(-250);
+        GENERATE_QR_CODE_IV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
-                final Handler handler = new Handler();
-                final int[] counter = {0};
-
-                Runnable r = new Runnable() {
-                    public void run() {
-//                        Log.d("Frontdoor", "generate QR-code");
-//                        counter[0]++;
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.178.202/cgi-bin/GrootLightBridge.py?cmd=test_" + counter[0]++,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        Log.d("Test", "response: " + counter[0]);
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {}
-                        });
-                        queue.add(stringRequest);
-
-
-                        if (counter[0] < 10){
-                            handler.postDelayed(this, 100);
-                        }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(mactivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                        ActivityCompat.requestPermissions(mactivity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                        return;
                     }
-                };
-
-                handler.postDelayed(r, 0);
-
-
+                }
+                showGenerateQrDialog();
             }
         });
-        rootView.addView(GENERATE_QR_CODE, 2);
+        GENERATE_QR_CODE_IV.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view) {
+                GetQRkeyDialogFragment newFragment = GetQRkeyDialogFragment.newInstance();
+                newFragment.show(mactivity.getFragmentManager(), "dialog");
+                return true;
+            }
+        });
+        rootView.addView(GENERATE_QR_CODE_IV, 2);
 
 
 
@@ -232,5 +219,24 @@ public class Frontdoor {
     private void showAddCardDialog(){
         AddCardDialogFragment newFragment = AddCardDialogFragment.newInstance();
         newFragment.show(mactivity.getFragmentManager(), "dialog");
+    }
+
+    private  void showGenerateQrDialog(){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mactivity);
+        if(sharedPref.getString(USERNAME, "").equals("")){
+            GetUserInfoDialogFragment newFragment = GetUserInfoDialogFragment.newInstance("Name", "For this feature your name is needed.");
+            newFragment.show(mactivity.getFragmentManager(), "dialog");
+        }else{
+            SharedPreferences prefs = mactivity.getSharedPreferences(QR_KEY, MODE_PRIVATE);
+            String qr_key = prefs.getString(QR_KEY, null);
+
+            if(qr_key != null){
+                GenerateQrDialogFragment newFragment = GenerateQrDialogFragment.newInstance(qr_key);
+                newFragment.show(mactivity.getFragmentManager(), "dialog");
+            }else{
+                GetQRkeyDialogFragment newFragment = GetQRkeyDialogFragment.newInstance();
+                newFragment.show(mactivity.getFragmentManager(), "dialog");
+            }
+        }
     }
 }

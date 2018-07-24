@@ -1,9 +1,13 @@
 package nl.nielshokke.huisapp;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String OPEN_CAMERA_TAG = "frontdooroOpenCamera";
+    private static final String USERNAME = "pref_Username";
 
     private FragmentStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             //mSectionsStatePagerAdapter.setOpenCamera();
         }
 
+
         queue = Volley.newRequestQueue(this);
 
         setTempHumid();
@@ -74,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         timer.scheduleAtFixedRate(refresher, 0,15000);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sharedPref.getString(USERNAME, "").equals("")){
+            GetUserInfoDialogFragment newFragment = GetUserInfoDialogFragment.newInstance("Welcome", "To continue and start using the huisapp please enter your name.");
+            newFragment.show(this.getFragmentManager(), "dialog");
+        }
+
     }
 
     @Override
