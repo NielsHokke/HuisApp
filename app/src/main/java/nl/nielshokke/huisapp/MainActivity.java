@@ -1,7 +1,5 @@
 package nl.nielshokke.huisapp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -34,6 +32,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nl.nielshokke.huisapp.Dialogs.GetUserInfoDialogFragment;
 import nl.nielshokke.huisapp.FloorFragments.Floor1Fragment;
 import nl.nielshokke.huisapp.FloorFragments.Floor2Fragment;
 import nl.nielshokke.huisapp.FloorFragments.Floor3Fragment;
